@@ -2,7 +2,7 @@ import os
 import io
 import requests
 import gradio as gr
-BACKEND_URL = "https://backend-image-itdr.onrender.com/generate-story"
+API_URL = "https://backend-image-itdr.onrender.com/generate-story"
 
 def generate(image, genre, length):
     if image is None:
@@ -13,19 +13,15 @@ def generate(image, genre, length):
     img_bytes.seek(0)
 
     files = {
-        "image": ("image.png", img_bytes.getvalue(), "image/png")
-    }
+    "image": open(image_path, "rb")
+}
 
-    data = {
-        "genre": genre,
-        "length": length
-    }
+data = {
+    "genre": genre,
+    "length": length
+}
 
-    response = requests.post(
-        BACKEND_URL,
-        files=files,
-        data=data
-    )
+response = requests.post(API_URL, files=files, data=data)
 
     print(response.status_code)
     print(response.text)
