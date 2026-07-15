@@ -13,16 +13,15 @@ def generate(image, genre, length):
     img_bytes.seek(0)
 
     files = {
-    "image": open(image_path, "rb")
-}
+        "image": ("image.png", img_bytes, "image/png")
+    }
 
-data = {
-    "genre": genre,
-    "length": length
-}
+    data = {
+        "genre": genre,
+        "length": length
+    }
 
-response = requests.post(API_URL, files=files, data=data)
-
+    response = requests.post(API_URL, files=files, data=data)
     print(response.status_code)
     print(response.text)
 
