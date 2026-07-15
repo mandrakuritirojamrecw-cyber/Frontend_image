@@ -2,9 +2,7 @@ import os
 import io
 import requests
 import gradio as gr
-
-# Backend API endpoint
-BACKEND_URL = "https://backend-image-itdr.onrender.com/generate"
+BACKEND_URL = "https://backend-image-itdr.onrender.com/generate-story"
 
 def generate(image, genre, length):
     if image is None:
