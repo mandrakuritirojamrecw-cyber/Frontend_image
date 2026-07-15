@@ -1,13 +1,10 @@
-import sys
 import os
-import gradio as gr
-sys.path.append(
-    os.path.join(os.path.dirname(__file__), "..", "Backend")
-)
-import requests
 import io
+import requests
+import gradio as gr
 
-BACKEND_URL = "https://backend-image-itdr.onrender.com"
+# Backend API endpoint
+BACKEND_URL = "https://backend-image-itdr.onrender.com/generate"
 
 def generate(image, genre, length):
     if image is None:
@@ -27,23 +24,30 @@ def generate(image, genre, length):
     }
 
     response = requests.post(
-    BACKEND_URL,
-    files=files,
-    data=data
-)
+        BACKEND_URL,
+        files=files,
+        data=data
+    )
 
-print(response.status_code)
-print(response.text)
+    print(response.status_code)
+    print(response.text)
 
-return response.text
+    if response.status_code == 200:
+        try:
+            return response.json().get("story", response.text)
+        except:
+            return response.text
+    else:
+        return f"Backend Error ({response.status_code}):\n{response.text}"
+
+
 with gr.Blocks(title="Image-to-Story Generator") as demo:
     gr.Markdown("# 📖 Image-to-Story Generator")
+
     with gr.Row():
         with gr.Column():
-            image = gr.Image(
-                type="pil",
-                label="Upload Image"
-            )
+            image = gr.Image(type="pil", label="Upload Image")
+
             genre = gr.Dropdown(
                 [
                     "Adventure",
@@ -57,6 +61,7 @@ with gr.Blocks(title="Image-to-Story Generator") as demo:
                 value="Adventure",
                 label="Story Genre"
             )
+
             length = gr.Radio(
                 [
                     "Short (100 words)",
@@ -66,19 +71,17 @@ with gr.Blocks(title="Image-to-Story Generator") as demo:
                 value="Medium (200 words)",
                 label="Story Length"
             )
+
             button = gr.Button("Generate Story")
+
         with gr.Column():
-            output = gr.Textbox(
-                lines=20,
-                label="Generated Story"
-            )
+            output = gr.Textbox(lines=20, label="Generated Story")
+
     button.click(
-        generate,
+        fn=generate,
         inputs=[image, genre, length],
         outputs=output
-)
-
-import os
+    )
 
 demo.launch(
     server_name="0.0.0.0",
