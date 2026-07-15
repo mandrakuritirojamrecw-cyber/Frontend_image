@@ -7,7 +7,7 @@ sys.path.append(
 import requests
 import io
 
-BACKEND_URL = "http://127.0.0.1:8000/generate-story"
+BACKEND_URL = "https://backend-image-itdr.onrender.com"
 
 def generate(image, genre, length):
     if image is None:
