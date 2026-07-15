@@ -27,12 +27,15 @@ def generate(image, genre, length):
     }
 
     response = requests.post(
-        BACKEND_URL,
-        files=files,
-        data=data
-    )
+    BACKEND_URL,
+    files=files,
+    data=data
+)
 
-    return response.json()["story"]
+print(response.status_code)
+print(response.text)
+
+return response.text
 with gr.Blocks(title="Image-to-Story Generator") as demo:
     gr.Markdown("# 📖 Image-to-Story Generator")
     with gr.Row():
